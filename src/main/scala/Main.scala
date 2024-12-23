@@ -2,10 +2,13 @@ import scala.io.StdIn.*
 import javax.print.DocFlavor.STRING
 import scala.collection.mutable.ArrayBuffer
 import scala.annotation.tailrec
+import control._
 
 @main
 def main: Unit =
   run()
+
+def tasksStorage = JsonStorage
 
 @tailrec
 def run(): Unit = {
@@ -32,10 +35,10 @@ def choice(): Either[String, Unit] = {
   key match
     case "0" =>
       print("Введите задачу: ")
-      TasksStorage.addTask(readLine())
+      tasksStorage.addTask(readLine())
       Right(())
     case "1" =>
-      val tasks = TasksStorage
+      val tasks = tasksStorage
         .getTasks()
         .zipWithIndex
         .map { case (task, index) => s"$index - $task" }
@@ -45,7 +48,7 @@ def choice(): Either[String, Unit] = {
       try {
         print("Введите индекс для удаления: ")
         val index = readInt()
-        if (!TasksStorage.deleteTask(index))
+        if (!tasksStorage.deleteTask(index))
           Left("Неверный индекс удаления")
         else
           Right(())
